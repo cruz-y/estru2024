@@ -1,0 +1,174 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct Estudiante {
+    string nombre;
+    int codigo;
+    float nota;
+    Estudiante* siguiente;
+};
+
+void agregarEstudiante(Estudiante*& cabeza, const string& nombre, int codigo, float nota) {
+    Estudiante* nuevo = new Estudiante;
+    nuevo->nombre = nombre;
+    nuevo->codigo = codigo;
+    nuevo->nota = nota;
+    nuevo->siguiente = cabeza;
+    cabeza = nuevo;
+}
+
+void ordenarPorCodigo(Estudiante* cabeza) {
+    if (cabeza == nullptr) return;
+
+    Estudiante* actual;
+    Estudiante* siguiente = nullptr;
+    bool ordenado;
+
+    do {
+        ordenado = true;
+        actual = cabeza;
+
+        while (actual->siguiente != siguiente) {
+            if (actual->codigo > actual->siguiente->codigo) {
+                swap(actual->nombre, actual->siguiente->nombre);
+                swap(actual->codigo, actual->siguiente->codigo);
+                swap(actual->nota, actual->siguiente->nota);
+                ordenado = false;
+            }
+            actual = actual->siguiente;
+        }
+        siguiente = actual;
+    } while (!ordenado);
+}
+
+void ordenarPorNota(Estudiante* cabeza) {
+    if (cabeza == nullptr) return;
+
+    Estudiante* actual;
+    Estudiante* siguiente = nullptr;
+    bool ordenado;
+
+    do {
+        ordenado = true;
+        actual = cabeza;
+
+        while (actual->siguiente != siguiente) {
+            if (actual->nota < actual->siguiente->nota) {
+                swap(actual->nombre, actual->siguiente->nombre);
+                swap(actual->codigo, actual->siguiente->codigo);
+                swap(actual->nota, actual->siguiente->nota);
+                ordenado = false;
+            }
+            actual = actual->siguiente;
+        }
+        siguiente = actual;
+    } while (!ordenado);
+}
+
+void encontrarMayorNota(Estudiante* cabeza) {
+    if (cabeza == nullptr) return;
+
+    Estudiante* mayor = cabeza;
+    Estudiante* actual = cabeza->siguiente;
+
+    while (actual != nullptr) {
+        if (actual->nota > mayor->nota) {
+            mayor = actual;
+        }
+        actual = actual->siguiente;
+    }
+
+    cout << "Mayor Nota: " << mayor->nota << " - Estudiante: " << mayor->nombre << " (Codigo: " << mayor->codigo << ")\n";
+}
+
+void encontrarMenorNota(Estudiante* cabeza) {
+    if (cabeza == nullptr) return;
+
+    Estudiante* menor = cabeza;
+    Estudiante* actual = cabeza->siguiente;
+
+    while (actual != nullptr) {
+        if (actual->nota < menor->nota) {
+            menor = actual;
+        }
+        actual = actual->siguiente;
+    }
+
+    cout << "Menor Nota: " << menor->nota << " - Estudiante: " << menor->nombre << " (Codigo: " << menor->codigo << ")\n";
+}
+
+void calcularPromedio(Estudiante* cabeza) {
+    if (cabeza == nullptr) return;
+
+    int contador = 0;
+    float suma = 0;
+    Estudiante* actual = cabeza;
+
+    while (actual != nullptr) {
+        suma += actual->nota;
+        contador++;
+        actual = actual->siguiente;
+    }
+
+    cout << "Promedio del Curso: " << suma / contador << "\n";
+}
+
+void mostrarEstudiantes(Estudiante* cabeza) {
+    Estudiante* actual = cabeza;
+
+    while (actual != nullptr) {
+        cout << "Nombre: " << actual->nombre << ", Codigo: " << actual->codigo << ", Nota: " << actual->nota << "\n";
+        actual = actual->siguiente;
+    }
+}
+
+int main() {
+    Estudiante* lista = nullptr;
+    int opcion;
+
+    do {
+        cout << "\nMenu de opciones:\n";
+        cout << "1. Ingresar datos de estudiantes\n";
+        cout << "2. Ordenar y mostrar lista por Codigo Estudiantil\n";
+        cout << "3. Ordenar y mostrar lista por Nota\n";
+        cout << "4. Mostrar mayor nota\n";
+        cout << "5. Mostrar menor nota\n";
+        cout << "6. Calcular promedio\n";
+        cout << "7. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        if (opcion == 1) {
+            string nombre;
+            int codigo;
+            float nota;
+            cout << "Ingrese el nombre del estudiante: ";
+            cin >> nombre;
+            cout << "Ingrese el codigo del estudiante: ";
+            cin >> codigo;
+            cout << "Ingrese la nota del estudiante: ";
+            cin >> nota;
+            agregarEstudiante(lista, nombre, codigo, nota);
+        } else if (opcion == 2) {
+            ordenarPorCodigo(lista);
+            mostrarEstudiantes(lista);
+        } else if (opcion == 3) {
+            ordenarPorNota(lista);
+            mostrarEstudiantes(lista);
+        } else if (opcion == 4) {
+            encontrarMayorNota(lista);
+        } else if (opcion == 5) {
+            encontrarMenorNota(lista);
+        } else if (opcion == 6) {
+            calcularPromedio(lista);
+        } else if (opcion == 7) {
+            cout << "Saliendo del programa...\n";
+        } else {
+            cout << "Opcion invalida. Por favor intente de nuevo.\n";
+        }
+    } while (opcion != 7);
+
+    return 0;
+}
