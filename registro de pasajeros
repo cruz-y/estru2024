@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+
+struct pasajro *cab,*aux,*aux2
+
+    std::strinng pirmer nombre;
+    int numero-documento;
+    int destino; 1: la bocana,2:pianguita,3:ladrillero;
+
+    cerarPasajero(std::primer nombre, int numero-documento,int destino){
+       aux= (pasajero*)malloc (sizeof (nuevoPasajero));
+       string;(nuevoPasajero->nombre,nombre);
+       nuevoPasajero->numero-docomento=numero_docomento;
+       nuevoPasajero->destino=destino;
+       nuevoPasajero->siguiente=null;
+       return nuevoPasajero;
+
+    }
+    void insertarPasajero(lista de pasajetro*nuevoPasajero){
+        if{lista->cabeza=null
+        lista->numero_documento<
+        nuevoPasajero->siguiente=lista->cabeza;
+        lista->cabeza=nuevoPasajero;
+        }
+        pasajero actual=lista->cabeza;
+        whille(actual->siguiente->numero_docomento<
+        nuevoPasajero->numero_docomento){
+            actual=actual->siguiente;
+        }
+          nuevoPasajero->siguiente=
+        actual->siguiente;
+          actual->siguiente=nuevoPasajero;
+    }
+    int main(){
+        listaPasajero listaBocana={NULL};
+        listaPasajero listaPianguita=(NULL);
+        listaPasajero listaLadrillero={NULL};
+    }
+    
+
+}
