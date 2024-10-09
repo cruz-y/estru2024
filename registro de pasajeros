@@ -1,41 +1,118 @@
 #include <iostream>
 #include <string>
 
-struct pasajro *cab,*aux,*aux2
+using namespace std;
 
-    std::strinng pirmer nombre;
-    int numero-documento;
-    int destino; 1: la bocana,2:pianguita,3:ladrillero;
+struct Pasajero {
+    string nombre;
+    int numeroDocumento;
+    int destino;
+    Pasajero* siguiente;
+};
 
-    cerarPasajero(std::primer nombre, int numero-documento,int destino){
-       aux= (pasajero*)malloc (sizeof (nuevoPasajero));
-       string;(nuevoPasajero->nombre,nombre);
-       nuevoPasajero->numero-docomento=numero_docomento;
-       nuevoPasajero->destino=destino;
-       nuevoPasajero->siguiente=null;
-       return nuevoPasajero;
+Pasajero* cab = nullptr;
 
-    }
-    void insertarPasajero(lista de pasajetro*nuevoPasajero){
-        if{lista->cabeza=null
-        lista->numero_documento<
-        nuevoPasajero->siguiente=lista->cabeza;
-        lista->cabeza=nuevoPasajero;
+void registrar() {
+    Pasajero* aux = new Pasajero;
+
+    cout << "Ingrese el nombre: ";
+    cin >> aux->nombre;
+
+    cout << "Ingrese el número de documento: ";
+    cin >> aux->numeroDocumento;
+
+    cout << "Seleccione el destino (1. La Bocana, 2. Piangüita, 3. Ladrilleros): ";
+    while (true) {
+        cin >> aux->destino;
+        if (cin.fail() || aux->destino < 1 || aux->destino > 3) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Entrada inválida. Por favor, ingrese un número entre 1 y 3: ";
+        } else {
+            cin.ignore(10000, '\n');
+            break;
         }
-        pasajero actual=lista->cabeza;
-        whille(actual->siguiente->numero_docomento<
-        nuevoPasajero->numero_docomento){
-            actual=actual->siguiente;
-        }
-          nuevoPasajero->siguiente=
-        actual->siguiente;
-          actual->siguiente=nuevoPasajero;
     }
-    int main(){
-        listaPasajero listaBocana={NULL};
-        listaPasajero listaPianguita=(NULL);
-        listaPasajero listaLadrillero={NULL};
-    }
-    
 
+    aux->siguiente = cab; 
+    cab = aux;
+}
+
+void mostrar() {
+    Pasajero* actual = cab;
+    int item = 0;
+
+    if (cab != nullptr) {
+        cout << "Item\tNúmero de Documento\tNombre\tDestino\n";
+        while (actual != nullptr) {
+            item++;
+            cout << item << "\t" << actual->numeroDocumento << "\t" << actual->nombre << "\t" << actual->destino << endl;
+            actual = actual->siguiente;
+        }
+    } else {
+        cout << "No hay pasajeros registrados.\n";
+    }
+}
+
+void ordenar() {
+    if (cab == nullptr) {
+        return;
+    }
+
+    bool intercambiado;
+    Pasajero* ptr1;
+    Pasajero* lptr = nullptr;
+
+    do {
+        intercambiado = false;
+        ptr1 = cab;
+
+        while (ptr1->siguiente != lptr) {
+            if (ptr1->destino > ptr1->siguiente->destino ||
+                (ptr1->destino == ptr1->siguiente->destino && ptr1->numeroDocumento > ptr1->siguiente->numeroDocumento)) {
+                
+                swap(*ptr1, *ptr1->siguiente);
+                intercambiado = true;
+            }
+            ptr1 = ptr1->siguiente;
+        }
+        lptr = ptr1;
+    } while (intercambiado);
+}
+
+int main() {
+    int opcion;
+
+    do {
+        cout << "\tMENU\n";
+        cout << "1. Ingresar Pasajero\n";
+        cout << "2. Mostrar lista de Pasajeros\n";
+        cout << "3. Ordenar lista de Pasajeros\n";
+        cout << "0. Salir\n";
+        cin >> opcion;
+
+        while (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Entrada inválida. Por favor, ingrese un número: ";
+            cin >> opcion;
+        }
+
+        switch (opcion) {
+            case 1: registrar(); break;
+            case 2: mostrar(); break;
+            case 3: ordenar(); break;
+            case 0: break;
+            default: cout << "Opción no válida. Intente de nuevo.\n";
+        }
+    } while (opcion != 0);
+
+    Pasajero* actual = cab;
+    while (actual != nullptr) {
+        Pasajero* temp = actual;
+        actual = actual->siguiente;
+        delete temp; 
+    }
+
+    return 0;
 }
