@@ -10,7 +10,7 @@ struct paciente {
     paciente *padre;
 };
 
-struct paciente *raiz, *aux, *aux2;
+struct paciente *raiz, *aux, *aux2, *padre;
 
 int posicionar() {    
     if(aux->edad < aux2->edad){        
@@ -190,10 +190,22 @@ int eliminar() {
     return 0;
 }
 
-int main() {
-    registrar();
-    mostrar();
-    buscar;
-    eliminar();
+int main(){
+    int opc;
+    do{
+        cout<<"1. Registrar"
+        <<endl<<"2. Mostrar"
+        <<endl<<"3. Buscar"
+        <<endl<<"4. Eliminar"
+        <<endl<<"5. Salir"
+        <<endl;
+        cin>>opc;
+        switch(opc){
+            case 1: registrar(); break;
+            case 2: mostrar(); break;
+            case 3: pedirAguja(); break;
+            case 4: eliminar(); break;
+        }
+    }while(opc!=5);
     return 0;
 }
