@@ -194,6 +194,6 @@ int main() {
     registrar();
     mostrar();
     buscar;
-    eliminar;
+    eliminar();
     return 0;
 }
