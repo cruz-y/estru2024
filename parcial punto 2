@@ -1,0 +1,199 @@
+#include "iostream"
+
+
+using namespace std;
+
+struct paciente {
+    int edad, documento; 
+    paciente *izq;
+    paciente *der;
+    paciente *padre;
+};
+
+struct paciente *raiz, *aux, *aux2;
+
+int posicionar() {    
+    if(aux->edad < aux2->edad){        
+        if(aux2->izq == NULL){
+            aux2->izq = aux;
+            aux->padre=aux2;            
+            return 0;
+        }
+        else {
+            aux2 = aux2->izq;
+            posicionar();
+        }
+    } 
+    else if(aux->documento < aux2->documento){        
+        if(aux2->izq == NULL){
+            aux2->izq = aux;
+            aux->padre=aux2; 
+                        
+            return 0;
+        }
+        else {
+            aux2 = aux2->izq;
+            posicionar();
+        }
+    }
+    else {
+        if(aux2->der == NULL){
+            aux2->der = aux;            
+            return 0;
+        } else {
+            aux2 = aux2->der;
+            posicionar();
+        }
+    }
+    return 0;
+}
+
+int registrar() {
+    aux = (struct paciente *) malloc(sizeof(struct paciente)); 
+    cout << "Escribe la edad: ";
+    cin >> aux->edad;
+    aux->izq = aux->der = NULL;
+
+    if (!raiz) {
+        raiz = aux;
+        aux = NULL;
+        free(aux);
+    }
+
+    aux = (struct paciente *) malloc(sizeof(struct paciente)); 
+    cout << "Escribe el documento: ";
+    cin >> aux->documento;
+    aux->izq = aux->der = NULL;
+
+    if (!raiz) {
+        raiz = aux;
+        aux = NULL;
+        free(aux);
+    }
+    else {        
+        aux2 = raiz;
+        posicionar();
+        aux = NULL;
+        free(aux);
+    }
+    return 0;
+}
+
+int recorrer_descendente(paciente *a) {
+    if (a != NULL) {
+        recorrer_descendente(a->der);
+        cout << "Edad: " << a->edad << ", Documento: " << a->documento << endl;
+        recorrer_descendente(a->izq);
+    }
+    return 0;
+}
+
+int mostrar() {
+    if (raiz) {        
+        recorrer_descendente(raiz); 
+    }
+    return 0;
+}
+
+int ubicar(paciente *a, int aguja){
+    if (a == NULL) 
+    return 0;
+
+    if (a->edad >= aguja) {
+        ubicar(a->der, aguja);
+    }
+
+    if (a->edad == aguja || a->documento == aguja) {
+        aux2 = a;
+        return 0;
+    }
+
+    if (a->edad < aguja) {
+        ubicar(a->izq, aguja);
+    }
+    
+    return 0;
+}
+
+int buscar_paciente(paciente *a, int documento) {
+    if (a == NULL) {
+        return 0; 
+    }
+if (a->documento == documento) {
+        aux2 = a;
+        return 1;
+    }
+
+    if (documento < a->documento) {
+        return buscar_paciente(a->izq, documento);
+    }
+    else {
+        return buscar_paciente(a->der, documento);
+    }
+}
+
+int buscar(int aguja) {
+    aux2 = NULL;
+    if (raiz != NULL) {
+        return buscar_paciente(raiz, aguja); 
+    } else {
+        cout << "." << endl;
+        return 0;
+    }
+}
+
+int pedirAguja() {
+    aux2 = NULL;  
+    int dato;
+    cout << "Dato a Busca(documento): ";
+    cin >> dato;  
+    
+    if (buscar(dato)) {  
+        cout << "documento Encontrado!" << endl;
+        cout << "Edad: " << aux2->edad << ", Documento: " << aux2->documento << endl;
+    } else {
+        cout << "no se encontró." << endl;
+    }
+}
+int eliminar() {
+    pedirAguja(); 
+    if (aux2) {
+        
+        if (aux2->izq == NULL && aux2->der == NULL) {
+            if (aux2 == raiz) {
+                free(aux2);
+                raiz = NULL; 
+            }
+            else {
+               int ubicarPadre(paciente *a, paciente *padre) {
+    if (a == NULL) {
+        return 0; 
+    }
+    if (a->izq == aux2 || a->der == aux2) {
+        aux2 = padre; 
+        return 1;     
+    }
+    if (ubicarPadre(a->izq, a)) {
+        return 1; 
+    }
+
+    if (ubicarPadre(a->der, a)) {
+        return 1; 
+    }
+
+    return 0; 
+}
+
+            }
+        }
+    }
+    return 0;
+}
+
+int main() {
+    registrar();
+    mostrar();
+    buscar;
+    eliminar;
+    return 0;
+}
