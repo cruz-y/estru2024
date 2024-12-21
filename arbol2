@@ -1,0 +1,182 @@
+#include "iostream"
+
+
+using namespace std;
+
+struct nodo {
+    nodo *izq;
+    int valor;
+    int altura;
+    nodo *der;
+};
+
+nodo *raiz = NULL;
+
+// Funciones auxiliares
+int altura(nodo *n) {
+    return n ? n->altura : 0;
+}
+
+int calcularEquilibrio(nodo *n) {
+    return n ? altura(n->izq) - altura(n->der) : 0;
+}
+
+nodo *rotacionDerecha(nodo *y) {
+    nodo *x = y->izq;
+    nodo *T2 = x->der;
+
+    x->der = y;
+    y->izq = T2;
+
+    y->altura = 1 + max(altura(y->izq), altura(y->der));
+    x->altura = 1 + max(altura(x->izq), altura(x->der));
+
+    return x;
+}
+
+nodo *rotacionIzquierda(nodo *x) {
+    nodo *y = x->der;
+    nodo *T2 = y->izq;
+
+    y->izq = x;
+    x->der = T2;
+
+    x->altura = 1 + max(altura(x->izq), altura(x->der));
+    y->altura = 1 + max(altura(y->izq), altura(y->der));
+
+    return y;
+}
+
+nodo *balancear(nodo *n) {
+    int equilibrio = calcularEquilibrio(n);
+
+    if (equilibrio > 1 && calcularEquilibrio(n->izq) >= 0)
+        return rotacionDerecha(n);
+
+    if (equilibrio > 1 && calcularEquilibrio(n->izq) < 0) {
+        n->izq = rotacionIzquierda(n->izq);
+        return rotacionDerecha(n);
+    }
+
+    if (equilibrio < -1 && calcularEquilibrio(n->der) <= 0)
+        return rotacionIzquierda(n);
+
+    if (equilibrio < -1 && calcularEquilibrio(n->der) > 0) {
+        n->der = rotacionDerecha(n->der);
+        return rotacionIzquierda(n);
+    }
+
+    return n;
+}
+
+nodo *insertarNodo(nodo *n, int valor) {
+    if (!n) {
+        nodo *nuevo = new nodo{NULL, valor, 1, NULL};
+        return nuevo;
+    }
+
+    if (valor < n->valor)
+        n->izq = insertarNodo(n->izq, valor);
+    else if (valor > n->valor)
+        n->der = insertarNodo(n->der, valor);
+    else
+        return n; // Evitar duplicados
+
+    n->altura = 1 + max(altura(n->izq), altura(n->der));
+
+    return balancear(n);
+}
+
+nodo *minimoValorNodo(nodo *n) {
+    nodo *actual = n;
+    while (actual->izq)
+        actual = actual->izq;
+    return actual;
+}
+
+nodo *eliminarNodo(nodo *raiz, int valor) {
+    if (!raiz)
+        return raiz;
+
+    if (valor < raiz->valor)
+        raiz->izq = eliminarNodo(raiz->izq, valor);
+    else if (valor > raiz->valor)
+        raiz->der = eliminarNodo(raiz->der, valor);
+    else {
+        if (!raiz->izq || !raiz->der) {
+            nodo *temp = raiz->izq ? raiz->izq : raiz->der;
+            if (!temp) {
+                temp = raiz;
+                raiz = NULL;
+            } else
+                *raiz = *temp;
+            delete temp;
+        } else {
+            nodo *temp = minimoValorNodo(raiz->der);
+            raiz->valor = temp->valor;
+            raiz->der = eliminarNodo(raiz->der, temp->valor);
+        }
+    }
+
+    if (!raiz)
+        return raiz;
+
+    raiz->altura = 1 + max(altura(raiz->izq), altura(raiz->der));
+
+    return balancear(raiz);
+}
+
+void mostrarJerarquico(nodo *n, string prefijo = "", bool esIzquierdo = true) {
+    if (n) {
+        cout << prefijo;
+        cout << (esIzquierdo ? "├──" : "└──");
+        cout << n->valor << endl;
+
+        mostrarJerarquico(n->izq, prefijo + (esIzquierdo ? "│   " : "    "), true);
+        mostrarJerarquico(n->der, prefijo + (esIzquierdo ? "│   " : "    "), false);
+    }
+}
+
+int main() {
+    int opcion, valor;
+    do {
+        cout << "\n1. Insertar nodo";
+        cout << "\n2. Eliminar nodo";
+        cout << "\n3. Mostrar arbol";
+        cout << "\n4. Salir";
+        cout << "\nOpcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                cout << "Digite el valor del nodo a insertar: ";
+                cin >> valor;
+                raiz = insertarNodo(raiz, valor);
+                cout << "Nodo insertado y balanceado correctamente." << endl;
+                break;
+
+            case 2:
+                cout << "Digite el valor del nodo a eliminar: ";
+                cin >> valor;
+                raiz = eliminarNodo(raiz, valor);
+                cout << "Nodo eliminado y arbol balanceado." << endl;
+                break;
+
+            case 3:
+                if (raiz)
+                    mostrarJerarquico(raiz);
+                else
+                    cout << "El arbol esta vacio." << endl;
+                break;
+
+            case 4:
+                cout << "Saliendo..." << endl;
+                break;
+
+            default:
+                cout << "Opcion invalida, intente de nuevo." << endl;
+        }
+    } while (opcion != 4);
+
+    return 0;
+}
